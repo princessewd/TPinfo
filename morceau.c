@@ -65,8 +65,8 @@ void afficherMorceau(const morceau m){
     else{
         printf("Tire: %s\n", m.titre);
         printf("Artiste: %s\n", m.artiste);
-        printf("Année: %d\n", m.annee);
-        printf("Durée: %d sec\n", m.duree);
+        printf("Annee: %d\n", m.annee);
+        printf("Duree: %d sec\n", m.duree);
         printf("Nombre de reference: %d\n", m.nbRef);
 
 
