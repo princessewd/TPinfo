@@ -63,7 +63,7 @@ void afficherMorceau(const morceau m){
         printf("Morceau inexistant");
     }
     else{
-        printf("Tire: %s\n", m.titre);
+        printf("Titre: %s\n", m.titre);
         printf("Artiste: %s\n", m.artiste);
         printf("Annee: %d\n", m.annee);
         printf("Duree: %d sec\n", m.duree);
