@@ -1,10 +1,10 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include "morceau.h"
+#include "Morceau.h"
 
-morceau creerMorceau(const char* titre, const char* artiste, int annee, int duree){
-    morceau m;
+Morceau creerMorceau(const char* titre, const char* artiste, int annee, int duree){
+    Morceau m;
     m.annee = annee;
     m.duree = duree;
     m.nbRef = 0;
@@ -29,7 +29,7 @@ morceau creerMorceau(const char* titre, const char* artiste, int annee, int dure
 
 }
 
-void detruireMorceau(morceau m){
+void detruireMorceau(Morceau m){
     if (m.titre != NULL) {
         free(m.titre);
     }
@@ -38,13 +38,13 @@ void detruireMorceau(morceau m){
     }
 }
 
-void incrementerRef(morceau*m){
+void incrementerRef(Morceau*m){
     if (m != NULL){
         m->nbRef++;
     }
 }
 
-int decrementerRef(morceau*m){
+int decrementerRef(Morceau*m){
     if(m == NULL){
         return 0;
     }
@@ -56,7 +56,7 @@ int decrementerRef(morceau*m){
     return 0;
 }
 
-void afficherMorceau(const morceau m){
+void afficherMorceau(const Morceau m){
     if(m.titre == NULL || m.artiste == NULL){
         printf("Morceau inexistant");
     }
@@ -78,7 +78,7 @@ int main() {
     
     // Création
     printf("1. Creation d'un morceau:\n");
-    morceau m1 = creerMorceau("Yesterday", "The Beatles", 1965, 125);
+    Morceau m1 = creerMorceau("Yesterday", "The Beatles", 1965, 125);
     afficherMorceau(m1);
     
     // Incrémentation
@@ -104,7 +104,7 @@ int main() {
     
     // Nouveau morceau
     printf("5. Test avec un autre morceau:\n");
-    morceau m2 = creerMorceau("Smells Like Teen Spirit", "Nirvana", 1991, 301);
+    Morceau m2 = creerMorceau("Smells Like Teen Spirit", "Nirvana", 1991, 301);
     afficherMorceau(m2);
     detruireMorceau(m2);
     printf("Morceau detruit manuellement\n");

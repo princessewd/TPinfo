@@ -7,12 +7,12 @@ typedef struct{
     int annee;
     int duree;
     int nbRef;
-} morceau;
+} Morceau;
 
-morceau creerMorceau(const char* titre, const char* artiste, int annee, int duree);
-void detruireMorceau(morceau m);
-void incrementerRef(morceau* m);
-int decrementerRef(morceau *m);
-void afficherMorceau(const morceau m);
+Morceau creerMorceau(const char* titre, const char* artiste, int annee, int duree); 
+void detruireMorceau(Morceau m);
+void incrementerRef(Morceau* m);
+int decrementerRef(Morceau *m);
+void afficherMorceau(const Morceau m);
 
 #endif
