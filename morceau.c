@@ -5,8 +5,6 @@
 
 morceau creerMorceau(const char* titre, const char* artiste, int annee, int duree){
     morceau m;
-    m.titre = NULL;
-    m.artiste = NULL;
     m.annee = annee;
     m.duree = duree;
     m.nbRef = 0;
