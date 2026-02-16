@@ -143,10 +143,12 @@ int main() {
                 scanf("%d", &dest);
                 
                 if (source >= 0 && source < nbPlaylists && dest >= 0 && dest < nbPlaylists) {
-                    printf("\n");
                     afficherPlaylist(playlists[source]);
                     printf("\nNumero du morceau a copier (1-%d) : ", playlists[source]->nbMorceaux);
                     scanf("%d", &indiceMorceau);
+
+                    int c;
+                    while ((c = getchar()) != '\n' && c != EOF);
                     
                     ajouterMorceauPlaylistDansAutrePlaylist(playlists[source], playlists[dest], indiceMorceau - 1);
                     printf("\n>>> Morceau copie avec succes !\n");
@@ -164,17 +166,22 @@ int main() {
                     break;
                 }
                 
+                int c;
+                while ((c = getchar()) != '\n' && c != EOF);
+
                 char titreRech[100];
                 printf("Titre du morceau a rechercher : ");
-                scanf("%s", titreRech);
-                
-                Morceau* morceauTrouve = rechercherMorceau(playlists[playlistCourante], titreRech); 
-                
-                if (morceauTrouve != NULL) {
-                    printf("\n>>> Morceau trouve !\n\n");
-                    afficherMorceau(*morceauTrouve);
-                } else {
-                    printf("\n>>> Morceau non trouve\n");
+
+                if (fgets(titreRech, sizeof(titreRech), stdin) != NULL){
+                    titreRech[strcspn(titreRech, "\n")] = '\0';  
+                    printf("Recherche du titre: '%s'\n", titreRech);               
+                    Morceau* morceauTrouve = rechercherMorceau(playlists[playlistCourante], titreRech); 
+                    if (morceauTrouve != NULL) {
+                        printf("\n>>> Morceau trouve !\n\n");
+                        afficherMorceau(*morceauTrouve);
+                    } else {
+                        printf("\n>>> Morceau non trouve\n");
+                    }
                 }
                 break;
 
@@ -264,15 +271,6 @@ int main() {
                     printf("\n>>> Playlist '%s' activee !\n", playlists[playlistCourante]->nom);
                 } else {
                     printf("\n>>> Playlist invalide\n");
-                }
-                break;
-
-            case 0:
-                printf("                           AU REVOIR !                                \n");
-                printf("=========================================================================\n\n");
-                
-                for (int i = 0; i < nbPlaylists; i++) {
-                    supprimerPlaylist(playlists[i]);
                 }
                 break;
 

@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <assert.h>
+#include<ctype.h>
 #include "playlist.h"
 
 playlist* creerPlaylist(int capacite, const char* nom){
@@ -28,12 +29,20 @@ int ajouterMorceauPlaylist(playlist *p, Morceau m){
         fprintf(stderr, "La playlist est pleine, impossible d'ajouter le morceau\n");
         return -1;
     }
-    Morceau *mPtr = (Morceau*)malloc(sizeof(Morceau));
-    assert (mPtr != NULL);
-   
-    *mPtr = m;
-    p->TabMorceaux[p->nbMorceaux] = mPtr;
+    
+    Morceau *nouveauMorceau = (Morceau*)malloc(sizeof(Morceau));
+    if (nouveauMorceau == NULL) {
+        fprintf(stderr, "Erreur d'allocation memoire\n");
+        return -1;
+    }
+    
+    *nouveauMorceau = m;
+    
+    incrementerRef(nouveauMorceau);
+    
+    p->TabMorceaux[p->nbMorceaux] = nouveauMorceau;
     p->nbMorceaux++;
+    
     return 0;
 }
 
@@ -42,11 +51,20 @@ void enleverMorceauPlaylist(playlist *p, int indice){
         fprintf(stderr, "Indice invalide pour enlever le morceau\n");
         return;
     }
-    free(p->TabMorceaux[indice]);
+    
+    Morceau *morceauASupprimer = p->TabMorceaux[indice];
+    
+    int estDetruit = decrementerRef(morceauASupprimer);
+    
     for(int i = indice; i < p->nbMorceaux - 1; i++){
         p->TabMorceaux[i] = p->TabMorceaux[i + 1];
     }
+    
     p->nbMorceaux--;
+    
+    if (estDetruit) {
+        printf("Morceau supprime definitivement (plus de references)\n");
+    }
 }
 
 void supprimerPlaylist(playlist *p){
@@ -63,19 +81,70 @@ void ajouterMorceauPlaylistDansAutrePlaylist(playlist *psource, playlist *pdesti
         fprintf(stderr, "Indice invalide pour ajouter le morceau dans l'autre playlist\n");
         return;
     }
-    Morceau *mPtr = psource->TabMorceaux[indice];
-    ajouterMorceauPlaylist(pdestination, *mPtr);
+    
+    
+    Morceau *morceauSource = psource->TabMorceaux[indice];
+    if (morceauSource == NULL) {
+        fprintf(stderr, "Morceau source invalide\n");
+        return;
+    }
+    
+    
+    Morceau nouveauMorceau = creerMorceau(
+        morceauSource->titre,    
+        morceauSource->artiste,  
+        morceauSource->annee,    
+        morceauSource->duree     
+    );
+    
+    if (nouveauMorceau.titre == NULL || nouveauMorceau.artiste == NULL) {
+        fprintf(stderr, "Erreur lors de la copie du morceau\n");
+        return;
+    }
+    
+    int resultat = ajouterMorceauPlaylist(pdestination, nouveauMorceau);
+    
+    if (resultat == 0) {
+        printf("Morceau copie avec succes : '%s' de '%s'\n", 
+               nouveauMorceau.titre, nouveauMorceau.artiste);
+    } else {
+        detruireMorceau(nouveauMorceau);
+        fprintf(stderr, "Erreur lors de l'ajout du morceau a la playlist destination\n");
+    }
+}
+
+int comparerTitres(const char* titre1, const char* titre2) {
+    if (titre1 == NULL || titre2 == NULL) return 0;
+    
+    while (*titre1 && *titre2) {
+        if (tolower((unsigned char)*titre1) != tolower((unsigned char)*titre2)) {
+            return 0;
+        }
+        titre1++;
+        titre2++;
+    }
+    return (*titre1 == '\0' && *titre2 == '\0');
 }
 
 Morceau* rechercherMorceau(playlist *p, const char* titre){
+    if (p == NULL || titre == NULL) return NULL;
+    
+    printf("Recherche de '%s' dans la playlist...\n", titre);  
+    
     for(int i = 0; i < p->nbMorceaux; i++){
-        if(strcmp(p->TabMorceaux[i]->titre, titre) == 0){
-            return p->TabMorceaux[i];
+        if(p->TabMorceaux[i] != NULL && p->TabMorceaux[i]->titre != NULL) {
+            printf("Comparaison avec: '%s'\n", p->TabMorceaux[i]->titre);  
+            
+            
+            if(strcmp(p->TabMorceaux[i]->titre, titre) == 0){
+                return p->TabMorceaux[i];
+            }
+          
         }
     }
+    printf("Aucun morceau trouve\n");  
     return NULL;
 }
-
 void sauvegarderPlaylist(const playlist *p, const char* nomFichier){
     FILE *f = fopen(nomFichier, "w");
     if(f == NULL){

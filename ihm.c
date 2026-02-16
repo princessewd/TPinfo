@@ -21,13 +21,31 @@ int afficherMenu(){
 }
 
 void saisirInfosMorceau(char* titre, char* artiste, int* annee, int* duree){
+    int c;
+    while ((c = getchar()) != '\n' && c != EOF);
+    
     printf("Entrez le titre du morceau : ");
-    scanf("%s", titre);
+    if (fgets(titre, 100, stdin) != NULL) {
+        size_t len = strlen(titre);
+        if (len > 0 && titre[len-1] == '\n') {
+            titre[len-1] = '\0';
+        }
+    }
+    
+    
     printf("Entrez l'artiste du morceau : ");
-    scanf("%s", artiste);
-    printf("Entrez l'année de sortie du morceau : ");
+    if (fgets(artiste, 100, stdin) != NULL) {
+        size_t len = strlen(artiste);
+        if (len > 0 && artiste[len-1] == '\n') {
+            artiste[len-1] = '\0';
+        }
+    }
+    
+    
+    printf("Entrez l'annee de sortie du morceau : ");
     scanf("%d", annee);
-    printf("Entrez la durée du morceau (en secondes) : ");
+    
+    printf("Entrez la duree du morceau (en secondes) : ");
     scanf("%d", duree);
 }
 

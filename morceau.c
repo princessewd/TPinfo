@@ -7,16 +7,16 @@ Morceau creerMorceau(const char* titre, const char* artiste, int annee, int dure
     Morceau m;
     m.annee = annee;
     m.duree = duree;
-    m.nbRef = 0;
+    m.nbRef = 0;  
 
-    m.titre = malloc(100 * sizeof(char));
+    m.titre = malloc((strlen(titre) + 1) * sizeof(char));  
     if(m.titre == NULL){
         printf("Erreur d'allocation pour le titre");
         return m;
     }
     strcpy(m.titre, titre);
 
-    m.artiste = malloc(100*sizeof(char));
+    m.artiste = malloc((strlen(artiste) + 1) * sizeof(char));  
     if (m.artiste == NULL){
         printf("Erreur d'allocation pour l'artiste");
         free(m.titre);
@@ -26,7 +26,6 @@ Morceau creerMorceau(const char* titre, const char* artiste, int annee, int dure
     strcpy(m.artiste, artiste);
 
     return m;
-
 }
 
 void detruireMorceau(Morceau m){
@@ -44,16 +43,16 @@ void incrementerRef(Morceau*m){
     }
 }
 
-int decrementerRef(Morceau*m){
+int decrementerRef(Morceau *m){
     if(m == NULL){
         return 0;
     }
     m->nbRef--;
     if(m->nbRef <= 0){
         detruireMorceau(*m);
-        return 1;
+        return 1;  
     }
-    return 0;
+    return 0;  
 }
 
 void afficherMorceau(const Morceau m){
