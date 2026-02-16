@@ -73,7 +73,7 @@ void afficherMorceau(const Morceau m){
 }
 
 
-int main() {
+/*int main() {
     printf("test module morceau\n\n");
     
     // Création
@@ -113,3 +113,4 @@ int main() {
     return 0;
 }
 
+*/
